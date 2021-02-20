@@ -70,4 +70,19 @@ function module:ForceSave(player)
 	end
 end
 
+function module:GetOfflineData(playerID)
+	local DataStoreService = game:GetService("DataStoreService")
+	local currentDatastore = DataStoreService:GetDataStore(require(script.Settings).Keycode)
+	local userData
+	
+	local playerKey = "Key_CODE"..playerID
+	local success, err = pcall(function()
+		userData = currentDatastore:GetAsync(playerKey)		
+	end)
+	
+	return userData
+	
+end
+
+
 return module

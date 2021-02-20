@@ -1,6 +1,6 @@
 -- Datastore library developed by Prooheckcp at
 -- 02/19/2021
--- 
+-- Version: 1.1
 
 --Settings--
 local projectSettings = require(script.Parent.Settings)
@@ -48,7 +48,7 @@ local function saveUser(player, isLeaving)
 			if actionsFeedback then warn(player.Name.." left the game!") end
 		end		
 		
-	else
+	elseif not RunService:IsStudio() then
 		
 		local userData = currentDatastore:GetAsync(playerKey)
 		
@@ -88,15 +88,6 @@ local function saveUser(player, isLeaving)
 		
 	end
 
-end
-
-local function getOfflineUser(userID)
-	local playerKey = "Key_CODE"..userID
-	local success, err = pcall(function()
-		local userData = currentDatastore:GetAsync(playerKey)
-		return userData
-	end)
-		
 end
 
 local function loadUser(player)

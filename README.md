@@ -1,5 +1,5 @@
 # ProStore
-## A small Roblox Data Store Library
+## A small Roblox Data Store Library V1.1
 Pro Store is a small library built in roblox with the purpose of helping you setting up your game database schema.
 
 - Simple
@@ -60,6 +60,28 @@ local ProStore = require(script.Parent.ProStore) --Change to script location
 
 --Adds a new item into the players inventory
 local newInventory = ProStore:Inc(player, "Inventory", {id = "Excalibur", type = "Sword"})
+```
+
+### ProStore:ForceSave(playerInstance)
+Forces the server to save this player data, do not use this very often as roblox has a limited amount of requests per minute. I'd personally recommend using it for robux purchases to avoid data loss.
+
+Example:
+```lua
+local ProStore = require(script.Parent.ProStore) --Change to script location
+
+--Forces the server to save this player data
+ProStore:ForceSave(player)
+```
+
+### ProStore:GetOfflineData(UserId)
+Returns an offline user data via his ID. This can be used for user lookup.
+
+Example:
+```lua
+local ProStore = require(script.Parent.ProStore) --Change to script location
+
+--Gets the user data
+local data = ProStore:GetOfflineData(player.UserId)
 ```
 
 ## Installation
