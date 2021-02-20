@@ -3,41 +3,23 @@
 -- 
 
 --Settings--
+local projectSettings = require(script.Parent.Settings)
 
---The current code being used for the server
-local keyCode = "keyuwuOwO"
+local projectSettings = require(script.Parent.Settings)
+local keyCode = projectSettings.Keycode
+local saveOnStudio = projectSettings.SaveOnStudio
+local actionsFeedback = projectSettings.actionsFeedback
+local autoSave = projectSettings.autoSave
+local your_schema = projectSettings.schema
 
---If Roblox Studio is allowed to save player data
-local saveOnStudio = true
-
---If the console should print all changes
-local actionsFeedback = true
-
---How often does the server auto save? (Default: every 3 minutes)
-local autoSave = 3
 ------------
 
--- This is an example of a schema
--- Change it to your needs
-
-local your_schema = {
-
-	["Points"] = 0,
-	["Coins"] = 10,
-	["Inventory"] = {},
-	["stats"] = {
-		["health"] = 0,
-		["strength"] = 0,
-		["power"] = 0
-	}
-
-}
 
 --------------------------------
 -- Do not touch               --
 -- anything below             --
--- this unless you            --
--- know what you are doing    --
+-- unless you know            --
+-- what you are doing         --
 --------------------------------
 
 
@@ -108,9 +90,19 @@ local function saveUser(player, isLeaving)
 
 end
 
+local function getOfflineUser(userID)
+	local playerKey = "Key_CODE"..userID
+	local success, err = pcall(function()
+		local userData = currentDatastore:GetAsync(playerKey)
+		return userData
+	end)
+		
+end
+
 local function loadUser(player)
 	local playerKey = "Key_CODE"..player.UserId
-
+	
+	
 	local success, err = pcall(function()
 		local userData = currentDatastore:GetAsync(playerKey)
 
@@ -140,6 +132,9 @@ local function loadUser(player)
 	if err then
 		warn(err)
 	end	
+	
+	
+	
 end
 
 
@@ -162,6 +157,10 @@ end
 --//___________\\--
 
 --//Events\\--
+
+script.Parent.ForcedSave.Event:Connect(function(player)
+	saveUser(player, false)
+end)
 
 game.Players.PlayerAdded:Connect(function(player)
 

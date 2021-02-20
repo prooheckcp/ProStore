@@ -63,4 +63,11 @@ function module:Add(player, parameterName, item)
 	
 end
 
+
+function module:ForceSave(player)
+	if player ~= nil then
+		script.ForcedSave:Fire(player)
+	end
+end
+
 return module
