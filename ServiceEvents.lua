@@ -14,7 +14,7 @@ local saveOnStudio = true
 local actionsFeedback = true
 
 --How often does the server auto save? (Default: every 3 minutes)
-local autoSave = 0.1 
+local autoSave = 3
 ------------
 
 -- This is an example of a schema
@@ -23,6 +23,7 @@ local autoSave = 0.1
 local your_schema = {
 
 	["Points"] = 0,
+	["Coins"] = 10,
 	["Inventory"] = {},
 	["stats"] = {
 		["health"] = 0,
@@ -146,7 +147,9 @@ end
 local usersCoroutines = {}
 
 local updateUser = function(player)
-
+	
+	print(player)
+	
 	local minutesToWait = math.floor(autoSave * 60)
 
 	while wait(minutesToWait) do
@@ -163,15 +166,18 @@ end
 game.Players.PlayerAdded:Connect(function(player)
 
 	loadUser(player)
-	usersCoroutines[tostring(player.UserId)] = coroutine.create(updateUser, player)
+	usersCoroutines[tostring(player.UserId)] = coroutine.create(updateUser)
 	
-	coroutine.resume(usersCoroutines[tostring(player.UserId)])
+	coroutine.resume(usersCoroutines[tostring(player.UserId)], player)
 
 end)
 
 game.Players.PlayerRemoving:Connect(function(player)
-		
+	
+	usersCoroutines[tostring(player.UserId)] = nil
+	
 	saveUser(player, true)
+	
 
 end)
 --//_______\\--
