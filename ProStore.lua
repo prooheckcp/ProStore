@@ -1,7 +1,6 @@
 --//Hold user data\\--
 
 local currentUsers = {}
-local usersCoroutines = {}
 --//_______________\\--
 
 local module = {
