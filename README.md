@@ -1,5 +1,5 @@
 # ProStore
-## A small Roblox Data Stora Library
+## A small Roblox Data Store Library
 Pro Store is a small library built in roblox with the purpose of helping you setting up your game database schema.
 
 - Simple
@@ -28,6 +28,8 @@ local newValue = ProStore:Get(player, "Coins")
 ```
 ### ProStore:Set(playerInstance, ParameterName, NewValue)
 Updates the value of this field. Doesn't return anything.
+
+Example:
 ```lua
 local ProStore = require(script.Parent.ProStore) --Change to script location
 
@@ -40,6 +42,8 @@ print(coins) --> Prints "20"
 ```
 ### ProStore:Inc(playerInstance, ParameterName, Amount)
 Increments a certain amount into the field (only works on numb type). Returns new updated value.
+
+Example:
 ```lua
 local ProStore = require(script.Parent.ProStore) --Change to script location
 
@@ -49,6 +53,8 @@ local newValue = ProStore:Inc(player, "Coins", 20)
 
 ### ProStore:Add(playerInstance, ParameterName, Item)
 Adds a new value (of any type) into the array. Returns updated array.
+
+Example:
 ```lua
 local ProStore = require(script.Parent.ProStore) --Change to script location
 
