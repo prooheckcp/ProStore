@@ -84,5 +84,25 @@ function module:GetOfflineData(playerID)
 	
 end
 
+function module:SetOfflineData(playerID, data)
+	local DataStoreService = game:GetService("DataStoreService")
+	local currentDatastore = DataStoreService:GetDataStore(require(script.Settings).Keycode)
+	local playerKey = "Key_CODE"..playerID
+	
+	for _, v in pairs(game.Players:GetPlayers())do
+		if v.UserId == playerID then
+			currentUsers[tostring(playerID)] = data
+			break
+		end
+	end
+	
+	local success, err = pcall(function()
+		currentDatastore:SetAsync(playerKey, data)		
+	end)
+	
+	return success
+	
+end
+
 
 return module

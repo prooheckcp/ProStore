@@ -80,8 +80,22 @@ Example:
 ```lua
 local ProStore = require(script.Parent.ProStore) --Change to script location
 
---Gets the user data
-local data = ProStore:GetOfflineData(player.UserId)
+--Gets the user data by ID (this ID belongs to prooheckcp)
+local data = ProStore:GetOfflineData(30165668)
+```
+
+### ProStore:SetOfflineData(UserId, data)
+Changes the data regarding an offline user.
+
+Example:
+```lua
+local ProStore = require(script.Parent.ProStore) --Change to script location
+
+--Gets the user data by ID (this ID belongs to prooheckcp)
+	local data = ProStore:GetOfflineData(30165668)
+	data.Points = 500
+--Save the changes on the offline player
+	ProStore:SetOfflineData(30165668, data)
 ```
 
 ## Installation
@@ -98,6 +112,7 @@ All it requires is Roblox Studio.
 Found any problem or simply wanna give some feedback regarding the library? Just hit me up!
 
 Discord: レム デベロッパー | prooheckcp#2001
+
 Twitter: https://twitter.com/Prooheckcp
 
 
