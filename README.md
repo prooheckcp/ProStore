@@ -65,7 +65,7 @@ Example:
 local ProStore = require(script.Parent.ProStore) --Change to script location
 
 --Adds a new item into the players inventory
-local newInventory = ProStore:Inc(player, "Inventory", {id = "Excalibur", type = "Sword"})
+local newInventory = ProStore:Add(player, "Inventory", {id = "Excalibur", type = "Sword"})
 ```
 
 ### ProStore:ForceSave(playerInstance)
