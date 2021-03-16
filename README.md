@@ -1,5 +1,11 @@
 # ProStore
-## A small Roblox Data Store Library V1.1
+## A small Roblox Data Store Library V1.2
+
+## Changes
+
+ -Fixed auto save
+ -Added session join event
+
 Pro Store is a small library built in roblox with the purpose of helping you setting up your game database schema.
 
 - Simple
@@ -96,6 +102,20 @@ local ProStore = require(script.Parent.ProStore) --Change to script location
 	data.Points = 500
 --Save the changes on the offline player
 	ProStore:SetOfflineData(30165668, data)
+```
+
+### ProStore:SetOfflineData(function(playerInstance, userData)end)
+The function gets played whenever a user joins the game. This funciton has access to both the player instance and the users data.
+
+Example:
+```lua
+local ProStore = require(script.Parent.ProStore) --Change to script location
+
+ProStore:AddStartEvent(function(player, userData)
+	print(player.Name.." just joined the game")
+	print(userData)
+end)
+
 ```
 
 ## Installation

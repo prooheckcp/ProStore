@@ -28,6 +28,7 @@ local DataStoreService = game:GetService("DataStoreService")
 local currentDatastore = DataStoreService:GetDataStore(keyCode)
 local moduleFunctions = require(script.Parent)
 local RunService = game:GetService("RunService")
+local proStore = require(script.Parent)
 --//______________\\--
 
 
@@ -92,10 +93,10 @@ end
 
 local function loadUser(player)
 	local playerKey = "Key_CODE"..player.UserId
-	
+	local userData
 	
 	local success, err = pcall(function()
-		local userData = currentDatastore:GetAsync(playerKey)
+		userData = currentDatastore:GetAsync(playerKey)
 
 		if userData == nil then
 			--First time playing the game
@@ -115,13 +116,14 @@ local function loadUser(player)
 
 			--Get his data into the current users
 			moduleFunctions.SetCurrentUsers(player.UserId, userData)
-
 		end
 	end)
 
 	--Display the error on console
 	if err then
 		warn(err)
+	else
+		return userData
 	end	
 	
 	
@@ -134,12 +136,26 @@ local usersCoroutines = {}
 
 local updateUser = function(player)
 	
-	print(player)
+	
 	
 	local minutesToWait = math.floor(autoSave * 60)
 
 	while wait(minutesToWait) do
-
+		
+		
+		local foundPlayer = false
+		for _, p in pairs(game.Players:GetPlayers())do
+			if p == player then
+				foundPlayer = true
+			end
+		end
+		
+		if not foundPlayer then
+			if actionsFeedback then warn("This player is no longer here") end
+			break
+		end
+		
+		print("called", player.Name)
 		if actionsFeedback then warn("Saved "..player.Name.." data!") end
 		saveUser(player, false)
 	end
@@ -155,10 +171,15 @@ end)
 
 game.Players.PlayerAdded:Connect(function(player)
 
-	loadUser(player)
+	local userData = loadUser(player)
 	usersCoroutines[tostring(player.UserId)] = coroutine.create(updateUser)
 	
 	coroutine.resume(usersCoroutines[tostring(player.UserId)], player)
+	
+	--play the events 
+	for _, method in pairs(proStore.GetCurrentStartEvents()) do
+		method(player, userData)
+	end
 
 end)
 

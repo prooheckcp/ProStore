@@ -1,6 +1,7 @@
 --//Hold user data\\--
 
 local currentUsers = {}
+local currentsStartEvents = {}
 --//_______________\\--
 
 local module = {
@@ -13,8 +14,18 @@ local module = {
 	end,
 	usersCoroutines = function(index)
 		return currentUsers[tostring(index)]
-	end
+	end,
+	
+	GetCurrentStartEvents = function()
+		return currentsStartEvents
+	end,
 }
+
+function module:AddStartEvent(method)
+	if typeof(method) == typeof(function()end) then
+		table.insert(currentsStartEvents, method)		
+	end
+end
 
 function module:Get(player, parameterName)
 		
