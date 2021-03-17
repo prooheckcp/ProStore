@@ -236,11 +236,10 @@ end)
 
 game:BindToClose(function()
 	
-	wait(1)
 	for _, player in pairs(game.Players:GetPlayers()) do
+		wait(.5)
 		usersCoroutines[tostring(player.UserId)] = nil
 		saveUser(player, true)
-		wait(1)
 	end
 end)
 --//_______\\--
