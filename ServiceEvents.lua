@@ -229,13 +229,18 @@ game.Players.PlayerAdded:Connect(function(player)
 
 end)
 
-game.Players.PlayerRemoving:Connect(function(player)
-	
+game.Players.PlayerRemoving:Connect(function(player)	
 	usersCoroutines[tostring(player.UserId)] = nil
-	
-	saveUser(player, true)
-	
+	saveUser(player, true)	
+end)
 
+game:BindToClose(function()
+	
+	wait(1)
+	for _, player in pairs(game.Players:GetPlayers()) do
+		usersCoroutines[tostring(player.UserId)] = nil
+		saveUser(player, true)
+	end
 end)
 --//_______\\--
 
