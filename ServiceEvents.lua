@@ -1,10 +1,8 @@
 -- Datastore library developed by Prooheckcp at
 -- 02/19/2021
--- Version: 1.1
+-- Version: 2.1: Update in 07/27/2021
 
 --Settings--
-local projectSettings = require(script.Parent.Settings)
-
 local projectSettings = require(script.Parent.Settings)
 local keyCode = projectSettings.Keycode
 local saveOnStudio = projectSettings.SaveOnStudio
@@ -31,6 +29,21 @@ local RunService = game:GetService("RunService")
 local proStore = require(script.Parent)
 --//______________\\--
 
+
+local function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
 
 local function saveUser(player, isLeaving)
 	
@@ -101,17 +114,18 @@ local function loadUser(player)
 		if userData == nil then
 			--First time playing the game
 			if actionsFeedback then warn(player.Name.." is playing the game for the first time!") end
-			moduleFunctions.SetCurrentUsers(player.UserId, your_schema)
-			userData = your_schema
+			moduleFunctions.SetCurrentUsers(player.UserId, deepcopy(your_schema))
+			userData = deepcopy(your_schema)
 		else
 					
 			local function loopThruTable(instance, userDataInstance)
+
 				for indexName, indexValue in pairs(instance) do
 					
 					local foundIndex = false
 					local storeFoundIndex = nil
 					for indexName2, indexValue2 in pairs(userDataInstance) do
-						if indexName2 == indexName then
+						if indexName2 == indexName and (typeof(indexValue2) == typeof(indexValue) or indexValue2 == nil) then
 							foundIndex = true
 							storeFoundIndex = indexValue2
 						end
@@ -127,38 +141,8 @@ local function loadUser(player)
 					
 				end
 			end
-			
+
 			loopThruTable(your_schema, userData)
-			
-			--[[
-			local function recheckParameters(indexName, tableInstance, nested)
-				local userParameter = userData[indexName]
-				if userParameter == nil or typeof(userParameter) ~= typeof(tableInstance[indexName]) then
-					
-					if nested ~= nil then
-						--First time having this parameter
-						userData[nested][indexName] = tableInstance[indexName]
-					else
-						--First time having this parameter
-						userData[indexName] = tableInstance[indexName]
-					end
-					
-				end
-			end
-			
-			local function recursiveLoop(tableInstance, nestedInstance)
-				--Check if user has all parameters
-				for indexName, indexValue in pairs(tableInstance)do
-					if typeof(indexValue) ~= typeof({}) then
-						recheckParameters(indexName, tableInstance, nestedInstance)	
-					else
-						recursiveLoop(indexValue, indexName)
-					end
-				end				
-			end
-			
-			recursiveLoop(your_schema)
-			]]
 
 			--Get his data into the current users
 			moduleFunctions.SetCurrentUsers(player.UserId, userData)
@@ -171,9 +155,7 @@ local function loadUser(player)
 	else
 		return userData
 	end	
-	
-	
-	
+		
 end
 
 
@@ -210,8 +192,11 @@ end
 --//___________\\--
 
 --//Events\\--
+local ForcedSaveRemote = Instance.new("BindableEvent")
+ForcedSaveRemote.Name = "ForcedSave"
+ForcedSaveRemote.Parent = script.Parent
 
-script.Parent.ForcedSave.Event:Connect(function(player)
+ForcedSaveRemote.Event:Connect(function(player)
 	saveUser(player, false)
 end)
 
@@ -234,13 +219,16 @@ game.Players.PlayerRemoving:Connect(function(player)
 	saveUser(player, true)	
 end)
 
-game:BindToClose(function()
-	
-	for _, player in pairs(game.Players:GetPlayers()) do
-		wait(.5)
-		usersCoroutines[tostring(player.UserId)] = nil
-		saveUser(player, true)
-	end
-end)
+if not RunService:IsStudio() then
+	game:BindToClose(function()
+		
+		for _, player in pairs(game.Players:GetPlayers()) do
+			usersCoroutines[tostring(player.UserId)] = nil
+			saveUser(player, true)
+		end
+	end)
+end
+
+
 --//_______\\--
 

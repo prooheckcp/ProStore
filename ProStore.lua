@@ -31,6 +31,8 @@ function module:Get(player, parameterName)
 		
 		local resultData = nil
 		
+		repeat wait() until currentUsers[tostring(player.UserId)]
+		
 		if player ~= nil then
 			resultData = currentUsers[tostring(player.UserId)][parameterName]
 		end
@@ -77,7 +79,7 @@ end
 
 function module:ForceSave(player)
 	if player ~= nil then
-		script.ForcedSave:Fire(player)
+		script:WaitForChild("ForcedSave"):Fire(player)
 	end
 end
 
